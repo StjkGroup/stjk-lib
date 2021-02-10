@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "@stjk/next/typescript/tslint-rules.json",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "jsx-boolean-value": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.{j,t}s",
+      "**/node_modules/**/*.{j,t}s",
+      "**/*.d.ts"
+    ]
+  }
+}
