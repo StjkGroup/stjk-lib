@@ -3,6 +3,7 @@
  */
 import {getPublicPathWithoutStartAndEndForwardSlash} from '../publicPath';
 import {getUser} from '../user';
+import cookies from '../cookie';
 
 const authorization = () => {
   const user = getUser();
@@ -22,19 +23,24 @@ export interface HeadersType {
 	[key: string]: any
 }
 
-const getHeaders = (headers?: HeadersType) => {
-  // const newHeaders = new Headers({
-  //   'Content-Type': contentType,
-  //   'Accept': acceptType,
-  //   'Authorization': authorization(),
-  // });
-	// contentType && newHeaders.append('Content-Type', contentType);
-	// newHeaders.append('Accept', acceptType);
-	// auth && newHeaders.append("Authorization", authorization());
+export type ParamsType = 'formData' | null;
+
+const getHeaders = (headers?: HeadersType, paramsType?: ParamsType) => {
+  const token = cookies.get('X-MOBILE-TOKEN');
+  const authHeader = {
+    'Authorization': authorization(),
+    'X-MOBILE-TOKEN': token,
+  }
+  if(paramsType === 'formData'){
+    return {
+      ...authHeader,
+      ...headers
+    }
+  }
 	return {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': authorization(),
+    ...authHeader,
     ...headers
   };
 };
@@ -72,14 +78,19 @@ export const reqGetBrace = ({method, cache='no-cache', headers}:ReqBrace) => {
 };
 
 export const reqPostBrace = ({method, params = {}, headers}:ReqBrace) => {
-  const contentType = headers ? headers['Content-Type'] : undefined;
+  let paramsType: ParamsType = null;
   let body = params;
-  if((!contentType || contentType === 'application/json') && typeof params === 'object'){
-    body = JSON.stringify(params);
+  if(params instanceof FormData){
+    paramsType = 'formData';
+  }else{
+    const contentType = headers ? headers['Content-Type'] : undefined;
+    if((!contentType || contentType === 'application/json') && typeof params === 'object'){
+      body = JSON.stringify(params);
+    }
   }
 	return {
 		method,
-		headers: getHeaders(headers),
+		headers: getHeaders(headers, paramsType),
 		credentials: 'same-origin',
 		mode: 'cors',
 		cache: 'no-cache',
