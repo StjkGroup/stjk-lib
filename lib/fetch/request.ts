@@ -142,7 +142,11 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
       if(canResolve){
         if(type === 'json'){
           res.json().then((result) => {
-            resolve({status, ...result});
+            if(result.errorCode === '106'){
+              window.location.href = '#/user/login';
+            }else{
+              resolve({status, ...result});
+            }
           })
         }else{
           resolve(res);
