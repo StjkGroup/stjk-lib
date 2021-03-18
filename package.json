@@ -1,6 +1,6 @@
 {
   "name": "@stjk/lib",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.7",
   "description": "stjk lib",
   "scripts": {
     "start": "cross-env NODE_ENV=development PORT=8000 node node_modules/@stjk/next/devServer/config.js",

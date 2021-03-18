@@ -27,9 +27,11 @@ export type ParamsType = 'formData' | null;
 
 const getHeaders = (headers?: HeadersType, paramsType?: ParamsType) => {
   const token = cookies.get('X-MOBILE-TOKEN');
-  const authHeader = {
+  const authHeader: any = {
     'Authorization': authorization(),
-    'X-MOBILE-TOKEN': token,
+  }
+  if(token){
+    authHeader['X-MOBILE-TOKEN'] = token;
   }
   if(paramsType === 'formData'){
     return {
@@ -142,8 +144,9 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
       if(canResolve){
         if(type === 'json'){
           res.json().then((result) => {
-            if(result.errorCode === '106'){
-              window.location.href = '#/user/login';
+            const errCodes = ['106', '105'];
+            if(errCodes.includes(result.errorCode)){
+              window.location.href = '/management/login?redirectUrl='+encodeURIComponent(location.href);
             }else{
               resolve({status, ...result});
             }
