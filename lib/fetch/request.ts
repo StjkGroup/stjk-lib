@@ -135,8 +135,8 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
 				if (status === 401 || status === 403) {
 					const publicPath = getPublicPathWithoutStartAndEndForwardSlash();
 					const scope = publicPath ? '/' + publicPath : '';
-					const pathname = window.location.pathname;
-					pathname === scope + '/login' || (window.location.href = scope + '/login?redirectUrl=' + encodeURIComponent(window.location.href));
+					const pathname = parent.location.pathname;
+					pathname === scope + '/login' || (parent.location.href = scope + '/login?redirectUrl=' + encodeURIComponent(parent.location.href));
 				} else{
           canResolve = true;
         }
@@ -146,7 +146,7 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
           res.json().then((result) => {
             const errCodes = ['106', '105'];
             if(errCodes.includes(result.errorCode)){
-              window.location.href = '/management/login?redirectUrl='+encodeURIComponent(location.href);
+              parent.location.href = '/management/login?redirectUrl='+encodeURIComponent(location.href);
             }else{
               resolve({status, ...result});
             }
