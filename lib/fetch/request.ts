@@ -73,7 +73,7 @@ export const reqGetBrace = ({method, cache='no-cache', headers}:ReqBrace) => {
 	return {
 		method,
 		headers: getHeaders(headers),
-		credentials: 'same-origin',
+		credentials: 'include',
 		mode: 'cors',
 		cache
 	};
@@ -93,7 +93,7 @@ export const reqPostBrace = ({method, params = {}, headers}:ReqBrace) => {
 	return {
 		method,
 		headers: getHeaders(headers, paramsType),
-		credentials: 'same-origin',
+		credentials: 'include',
 		mode: 'cors',
 		cache: 'no-cache',
 		body
@@ -146,7 +146,7 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
           res.json().then((result) => {
             const errCodes = ['106', '105'];
             if(errCodes.includes(result.errorCode)){
-              parent.location.href = '/management/login?redirectUrl='+encodeURIComponent(location.href);
+              parent.location.href = parent.location.origin+'/management/login?redirectUrl='+encodeURIComponent(parent.location.href);
             }else{
               resolve({status, ...result});
             }
