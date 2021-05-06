@@ -145,7 +145,7 @@ export const promise = ({url, options = {}, type}: PromiseType) => {
         if(type === 'json'){
           res.json().then((result) => {
             const errCodes = ['106', '105'];
-            if(errCodes.includes(result.errorCode)){
+            if(errCodes.includes(result.errorCode) && parent.location.pathname.indexOf('login') < 0){
               parent.location.href = parent.location.origin+'/management/login?redirectUrl='+encodeURIComponent(parent.location.href);
             }else{
               resolve({status, ...result});
